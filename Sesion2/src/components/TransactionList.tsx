@@ -15,17 +15,21 @@ interface TransactionListProps {
 
 function TransactionList({ transactions }: TransactionListProps) {
   return (
-    <div className="transaction-list">
-      <h3>Movimientos Recientes</h3>
+    <section className="rounded-2xl bg-white p-6 shadow-md sm:p-8">
+      <h3 className="text-xl font-bold text-slate-900">
+        Movimientos recientes
+      </h3>
 
       {transactions.length === 0 ? (
-        <p className="no-transactions">No hay movimientos</p>
+        <p className="mt-4 text-sm text-slate-500">
+          No hay movimientos recientes
+        </p>
       ) : (
-        <ul>
+        <ul className="mt-4 space-y-4">
           {transactions.map((transaction) => (
             <li
               key={transaction.id}
-              className={`transaction ${transaction.type}`}
+              className="flex items-center justify-between rounded-lg bg-slate-100 p-4 shadow-sm"
             >
               <div className="transaction-info">
                 <span className="transaction-description">
@@ -41,7 +45,7 @@ function TransactionList({ transactions }: TransactionListProps) {
           ))}
         </ul>
       )}
-    </div>
+    </section>
   );
 }
 

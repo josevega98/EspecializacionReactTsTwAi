@@ -61,7 +61,7 @@ function App() {
   return (
     <div className="banking-app">
       {/* Header con nombre del usuario */}
-      <Header userName="Carlos" />
+      <Header userName="JUAN" />
 
       {/* Contenedor principal */}
       <main className="main-content">
