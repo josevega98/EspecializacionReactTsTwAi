@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import {
-  Header,
-  BalanceCard,
-  Nosotros,
-  ProtectedRoute,
-  TransferForm,
-  TransactionList,
-  type Transaction,
-} from "./components";
-import "./App.css";
+import BalanceCard from "./BalanceCard";
+import Header from "./Header";
+import Nosotros from "./Nosotros";
+import ProtectedRoute from "./ProtectedRoute";
+import TransactionList, { type Transaction } from "./TransactionList";
+import TransferForm from "./TransferForm";
+import "../../../App.css";
 
 const initialTransactions: Transaction[] = [
   {
@@ -137,7 +134,7 @@ function BankingPage({ onLogout }: BankingPageProps) {
   );
 }
 
-function App() {
+export default function BankingApp() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -199,5 +196,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

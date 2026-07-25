@@ -124,6 +124,9 @@ npm install react-hook-form
 
 # Iconos con Lucide React
 npm install lucide-react
+
+# Iconos con Lucide React
+npm install react-router-dom
 ```
 
 ---

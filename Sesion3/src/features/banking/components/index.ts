@@ -1,10 +1,8 @@
-// Exportamos todos los componentes desde un solo archivo (barrel export)
-// Esto facilita las importaciones en otros archivos
-
+export { default as BankingApp } from "./BankingApp";
 export { default as Header } from "./Header";
 export { default as BalanceCard } from "./BalanceCard";
 export { default as Nosotros } from "./Nosotros";
 export { default as ProtectedRoute } from "./ProtectedRoute";
-export { default as TransferForm } from "./TransferForm";
 export { default as TransactionList } from "./TransactionList";
+export { default as TransferForm } from "./TransferForm";
 export type { Transaction } from "./TransactionList";
