@@ -66,7 +66,7 @@ export default function CounterHookDemo() {
       </p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
-        <Tarjeta titulo="Contador A" inicio={0} />
+        <Tarjeta titulo="Contador A" inicio={100} />
         <Tarjeta titulo="Contador B" inicio={10} />
       </div>
     </section>

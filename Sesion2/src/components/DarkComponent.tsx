@@ -6,7 +6,7 @@ function DarkComponent() {
 
   return (
     <div className={darkMode ? "dark" : ""}>
-      <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
+      <main className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-white ">
         <div className="mx-auto max-w-5xl p-8">
           <h1 className="mb-4 text-3xl font-bold">
             Dark Mode con Tailwind CSS

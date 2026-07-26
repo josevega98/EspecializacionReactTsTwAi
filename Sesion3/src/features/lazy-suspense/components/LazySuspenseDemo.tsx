@@ -19,7 +19,7 @@ function Perfil() {
 const PerfilLazy = lazy(
   () =>
     new Promise<{ default: typeof Perfil }>((resolve) => {
-      setTimeout(() => resolve({ default: Perfil }), 1500);
+      setTimeout(() => resolve({ default: Perfil }), 5000);
     }),
 );
 

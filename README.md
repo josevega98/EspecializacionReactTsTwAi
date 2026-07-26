@@ -222,3 +222,113 @@ npm run build    # build de produccion
 npm run preview  # vista previa del build
 npm run lint     # linting
 ```
+
+---
+
+## 📡 Sesión 4: Consumo de APIs y TanStack Query
+
+### Instalación
+
+```bash
+# Axios - Cliente HTTP
+npm install axios
+
+# TanStack Query (React Query)
+npm install @tanstack/react-query @tanstack/react-query-devtools
+
+# JSON Server - API REST local para desarrollo
+npm install -D json-server
+```
+
+### JSON Server (API REST local)
+
+Servidor REST completo en segundos para desarrollo y pruebas.
+
+**1. Crear `db.json` en la raíz del proyecto:**
+
+```json
+{
+  "posts": [
+    { "id": 1, "title": "Primer post", "body": "Contenido" },
+    { "id": 2, "title": "Segundo post", "body": "Más contenido" }
+  ]
+}
+```
+
+**2. Script en package.json:**
+
+```json
+"scripts": {
+  "server": "json-server db.json --port 3001"
+}
+```
+
+**3. Ejecutar (2 terminales):**
+
+```bash
+# Terminal 1 - API
+npm run server
+
+# Terminal 2 - App React
+npm run dev
+```
+
+La API queda disponible en `http://localhost:3001/posts` con GET, POST, PUT, DELETE reales.
+
+### Conceptos Clave
+
+#### Fetch vs Axios
+
+| Característica              | Fetch       | Axios               |
+| --------------------------- | ----------- | ------------------- |
+| Nativo del navegador        | ✅          | ❌                  |
+| Parseo JSON automático      | ❌ (manual) | ✅                  |
+| Errores HTTP como excepción | ❌ (manual) | ✅                  |
+| Interceptores               | ❌          | ✅                  |
+| Configuración centralizada  | ❌          | ✅ (`axios.create`) |
+
+#### Cliente HTTP con Bearer Token
+
+```typescript
+const http = axios.create({ baseURL: "https://api.ejemplo.com" });
+
+http.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+```
+
+#### TanStack Query - Estados de una consulta
+
+- **isLoading**: Primera carga, sin datos en cache
+- **isError**: La petición falló
+- **isSuccess**: Datos disponibles
+- **data.length === 0**: Lista vacía (empty state)
+
+#### TanStack Query - Cache e Invalidación
+
+```typescript
+// Consulta con cache
+const { data, isLoading, isError } = useQuery({
+  queryKey: ["posts"],
+  queryFn: fetchPosts,
+  staleTime: 1000 * 60, // 1 minuto "fresco"
+});
+
+// Mutación con invalidación
+const mutation = useMutation({
+  mutationFn: createPost,
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
+});
+```
+
+#### Estructura recomendada
+
+```
+src/
+├── ClientHTTP/
+│   └── httpClient.ts      # Instancia axios configurada
+├── components/
+│   ├── FetchVsAxios.tsx   # Comparación Fetch vs Axios
+│   └── TanStackQueryDemo.tsx # Estados y cache
+```
