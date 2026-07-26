@@ -1,25 +1,19 @@
 {
-  "posts": [
+  "notas": [
     {
       "id": "1",
-      "title": "Introducción a React",
-      "body": "React es una librería para construir interfaces"
+      "titulo": "Introducción a React",
+      "contenido": "React es una librería para construir interfaces"
     },
     {
       "id": "2",
-      "title": "TypeScript básico",
-      "body": "TypeScript añade tipado estático a JavaScript"
+      "titulo": "TypeScript básico",
+      "contenido": "TypeScript añade tipado estático a JavaScript"
     },
     {
       "id": "3",
-      "title": "TanStack Query",
-      "body": "Manejo profesional de estado del servidor"
-    },
-    {
-      "title": "hola",
-      "body": "cuerpo",
-      "id": "aUb8BuGCMu0"
+      "titulo": "TanStack Query",
+      "contenido": "Manejo profesional de estado del servidor"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

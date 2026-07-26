@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-type Post = { id: number; title: string; body: string };
+type Nota = { id: number; titulo: string; contenido: string };
 type Opciones = { vacio: boolean; fallar: boolean };
 
 const BASE_URL = "http://localhost:3001";
@@ -23,10 +23,10 @@ http.interceptors.request.use((config) => {
 });
 
 // --- funciones de la API REST (axios) ---
-async function getPosts({ vacio, fallar }: Opciones): Promise<Post[]> {
+async function getNotas({ vacio, fallar }: Opciones): Promise<Nota[]> {
   if (fallar) {
     // Forzar error 404
-    const { data } = await http.get<Post[]>("/ruta-que-no-existe");
+    const { data } = await http.get<Nota[]>("/ruta-que-no-existe");
     return data;
   }
   if (vacio) {
@@ -34,32 +34,35 @@ async function getPosts({ vacio, fallar }: Opciones): Promise<Post[]> {
     return [];
   }
   // Caso normal
-  const { data } = await http.get<Post[]>("/posts");
+  const { data } = await http.get<Nota[]>("/notas");
   return data;
 }
 
-async function createPost(title: string): Promise<Post> {
-  const { data } = await http.post<Post>("/posts", { title, body: "cuerpo" });
+async function createNota(titulo: string): Promise<Nota> {
+  const { data } = await http.post<Nota>("/notas", {
+    titulo,
+    contenido: "contenido",
+  });
   return data;
 }
 
 // ============================================================
 //  HOOK REUTILIZABLE con TanStack Query
 // ============================================================
-function usePosts(opciones: Opciones) {
+function useNotas(opciones: Opciones) {
   const qc = useQueryClient();
 
   const consulta = useQuery({
-    queryKey: ["posts", opciones], // cada combinación = su propio cache
-    queryFn: () => getPosts(opciones),
+    queryKey: ["notas", opciones], // cada combinación = su propio cache
+    queryFn: () => getNotas(opciones),
     staleTime: 1000 * 20, // 20s "fresco": no vuelve a pedir de más → CACHE
     retry: false, // sin reintentos, para ver el error al instante
   });
 
   const crear = useMutation({
-    mutationFn: createPost,
-    // al crear, marca "posts" como viejo → refetch automático (INVALIDACIÓN)
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["posts"] }),
+    mutationFn: createNota,
+    // al crear, marca "notas" como viejo → refetch automático (INVALIDACIÓN)
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["notas"] }),
   });
 
   return { consulta, crear };
@@ -68,12 +71,12 @@ function usePosts(opciones: Opciones) {
 // ============================================================
 //  COMPONENTE: pinta los CUATRO estados
 // ============================================================
-function ListaPosts() {
+function ListaNotas() {
   const [vacio, setVacio] = useState(false);
   const [fallar, setFallar] = useState(false);
-  const [title, setTitle] = useState("");
+  const [titulo, setTitulo] = useState("");
 
-  const { consulta, crear } = usePosts({ vacio, fallar });
+  const { consulta, crear } = useNotas({ vacio, fallar });
 
   return (
     <div className="max-w-xl mx-auto p-6 font-sans text-slate-800">
@@ -103,14 +106,16 @@ function ListaPosts() {
       <div className="flex gap-2 mb-4">
         <input
           className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg outline-none focus:border-indigo-400"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Título nuevo"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+          placeholder="Título de la nota"
         />
         <button
           className="px-4 py-2 text-sm font-semibold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 disabled:opacity-50 cursor-pointer"
-          disabled={crear.isPending || !title.trim()}
-          onClick={() => crear.mutate(title, { onSuccess: () => setTitle("") })}
+          disabled={crear.isPending || !titulo.trim()}
+          onClick={() =>
+            crear.mutate(titulo, { onSuccess: () => setTitulo("") })
+          }
         >
           {crear.isPending ? "Creando…" : "Crear"}
         </button>
@@ -122,7 +127,7 @@ function ListaPosts() {
           // 1) LOADING
           <div className="flex flex-col items-center justify-center gap-2 py-8">
             <span className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm text-slate-500">Cargando posts…</span>
+            <span className="text-sm text-slate-500">Cargando notas…</span>
           </div>
         ) : consulta.isError ? (
           // 2) ERROR
@@ -142,18 +147,18 @@ function ListaPosts() {
           // 3) EMPTY
           <p className="flex items-center justify-center py-8">
             <span className="text-sm text-slate-500">
-              No hay posts para mostrar.
+              No hay notas para mostrar.
             </span>
           </p>
         ) : (
           // 4) SUCCESS
           <ul className="list-none p-0 m-0">
-            {consulta.data?.map((p) => (
+            {consulta.data?.map((n) => (
               <li
-                key={p.id}
+                key={n.id}
                 className="px-3 py-2 text-sm border-b border-slate-100 last:border-b-0"
               >
-                {p.title}
+                {n.titulo}
               </li>
             ))}
           </ul>
@@ -172,7 +177,7 @@ const queryClient = new QueryClient();
 export default function TanStackQueryDemo() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ListaPosts />
+      <ListaNotas />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
